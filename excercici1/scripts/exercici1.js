@@ -2,25 +2,21 @@
 function startGame() {
     var randomNumber = Math.round(Math.random() * 10);
     var colorDiv = document.getElementById("colorBasedNum");
-    console.log(randomNumber); // --> Debug en la consola
+    console.log("Número aleatorio generado:", randomNumber); // por si no lo adivinas :)
 
-    if (randomNumber >= 5) {
-        colorDiv.style.backgroundColor = "green";
-    } else {
-        colorDiv.style.backgroundColor = "red";
-    }
+    colorDiv.style.backgroundColor = randomNumber >= 5 ? "green" : "red";
 
     var encertaHtml = window.open("encerta.html", "_blank", "width=600,height=400");
-
+    var RegresiveCount;
     encertaHtml.onload = function () {
         var encertaHtmlDocument = encertaHtml.document;
         var countText = encertaHtmlDocument.getElementById("cron");
-        var tiempo = 1000;
 
-        var RegresiveCount = setInterval(() => {
+        encertaHtml.adivinarNum = adivinarNum; //--> Recordatorio => Esto asigna la funcion a la window del otro html, para que se pueda llamar desde ahi!
+        var tiempo = 30;
+        RegresiveCount = setInterval(() => {
             countText.innerHTML = tiempo;
             tiempo--;
-
             if (tiempo < 0) {
                 clearInterval(RegresiveCount);
                 encertaHtml.close();
@@ -28,17 +24,16 @@ function startGame() {
         }, 1000);
     };
 
-    encertaHtml.adivinarNum = adivinarNum;
     function adivinarNum() {
         var encertaHtmlDocument = encertaHtml.document;
-        var clientNum = parseInt(encertaHtmlDocument.getElementById("newNum"))
-        if (clientNum == randomNumber){
+        var clientNum = parseInt(encertaHtmlDocument.getElementById("newNum").value);
+
+        if (clientNum === randomNumber) {
+            console.log("correcto")
+            encertaHtml.clearInterval(RegresiveCount)
             encertaHtml.close();
-        }else{
-            alert("error");
+        } else {
+            console.log("incorrecto")
         }
     }
-
 }
-
-
