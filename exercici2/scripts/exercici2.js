@@ -66,8 +66,8 @@ function startGame() {
                 });
                 alert("Se acabo!")
             }
-            if (time == 1) {
-                let rand = randomNumber(3, 5);
+            if (time <= 3) {
+                let rand = randomNumber(1, 10);
                 console.log(rand)
                 windowGenerator(rand);
 
