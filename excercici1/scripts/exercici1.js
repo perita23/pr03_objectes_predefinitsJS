@@ -24,10 +24,12 @@ function getCookie(cname) {
 /* Funciones del juego */
 function startGame() {
     document.getElementById("history").innerHTML = ""
-
+    var intentos = new Array();
+    for (let index = 0; index < intentos.length; index++) {
+        intentos.splice(index);
+    }
     var randomNumber = Math.round(Math.random() * 10);
     var colorDiv = document.getElementById("colorBasedNum");
-    var intentos = new Array();
     console.log("Número aleatorio generado:", randomNumber); // por si no lo adivinas :)
 
     colorDiv.style.backgroundColor = randomNumber >= 5 ? "green" : "red";
@@ -62,6 +64,7 @@ function startGame() {
             encertaHtml.clearInterval(RegresiveCount)
             encertaHtml.close();
             document.getElementById("history").innerHTML = intentos
+            document.getElementById("history").innerHTML = "<h1>Historial</h1><br><br>" + intentos
         } else {
             intentos.push("<b>Numero insertado =></b> " + clientNum + " -> erroneo!<br>");
         }

@@ -2,6 +2,7 @@ var RegresiveCount;
 var colorList = ["red", "blue", "green", "yellow"];
 var windowList = [];
 var actualWindow = null;
+var openedWindows = 0;
 
 function randomNumber(min, max) {
     return Math.floor(Math.random() * max) + min;
@@ -43,6 +44,8 @@ function windowGenerator(rand) {
             "_blank",
             `width=400,height=200,left=${randomNumber(0, screen.width)},top=${randomNumber(0, screen.height)},resizable=no,scrollbars=no`
         )
+        openedWindows++;
+
         ventana.addEventListener("load", () => {
             ventana.document.getElementById("colorText").innerHTML = color;
             ventana.document.body.style.backgroundColor = color;
@@ -54,24 +57,29 @@ function windowGenerator(rand) {
 }
 
 function startGame() {
-    var time = 0;
+    var time = 30;
+    var count = document.getElementById("count")
+
     if (RegresiveCount == null) {
         console.log("starting game")
+        count.innerHTML = time;
+        let timeToSpawn = time - 3;
         RegresiveCount = setInterval(() => {
-            time++;
-            if (time == 600) {
+            if (time == 0) {
                 clearInterval(RegresiveCount);
                 windowList.forEach(element => {
                     element.close()
                 });
-                alert("Se acabo!")
+                console.log(openedWindows);
+                alert("Se acabó!")
             }
-            if (time <= 3) {
+            if (time >= timeToSpawn) {
                 let rand = randomNumber(1, 10);
                 console.log(rand)
                 windowGenerator(rand);
-
             }
+            time--;
+            count.innerHTML = time;
         }, 1000);
     } else {
         console.log("There's an active interval")
