@@ -73,8 +73,8 @@ function startGame() {
                 console.log(openedWindows);
                 alert("Se acabó!")
             }
-            if (time >= timeToSpawn) {
-                let rand = randomNumber(1, 10);
+            if (time == 1) {
+                let rand = randomNumber(3, 5);
                 console.log(rand)
                 windowGenerator(rand);
             }
