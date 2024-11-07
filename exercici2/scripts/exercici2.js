@@ -63,7 +63,6 @@ function startGame() {
     if (RegresiveCount == null) {
         console.log("starting game")
         count.innerHTML = time;
-        let timeToSpawn = time - 3;
         RegresiveCount = setInterval(() => {
             if (time == 0) {
                 clearInterval(RegresiveCount);
@@ -73,8 +72,8 @@ function startGame() {
                 console.log(openedWindows);
                 alert("Se acabó!")
             }
-            if (time == 1) {
-                let rand = randomNumber(3, 5);
+            if (time >= 27) {
+                let rand = randomNumber(1, 5);
                 console.log(rand)
                 windowGenerator(rand);
             }
