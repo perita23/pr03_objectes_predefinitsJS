@@ -12,6 +12,44 @@ var windowList = [];
 var actualWindow = null;
 var openedWindows = 0;
 var ventanasUnclosed = 0;
+var isCenter = false;
+var cookieCont = document.getElementById("cookieCont");
+
+cookieCont.innerHTML = getCookie("lastTry")
+
+function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
+function getCookie(cname) {
+    let name = cname + "=";
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+
+function checkCookie() {
+    let user = getCookie("username");
+    if (user != "") {
+        alert("Welcome again " + user);
+    } else {
+        user = prompt("Please enter your name:", "");
+        if (user != "" && user != null) {
+            setCookie("username", user, 365);
+        }
+    }
+}
 
 /** Generador de numeros random
  * @param min => valor minimo que puede devolver la funcion
@@ -62,10 +100,17 @@ function windowGenerator(rand) {
     for (let index = 0; index < rand; index++) {
         let randColor = randomNumber(0, 4);
         let color = colorList[randColor]
+        let randX = randomNumber(0, screen.width);
+        let randY = randomNumber(0, screen.height)
+        if (!isCenter) {
+            randX = screen.width / 2;
+            randY = screen.height / 2;
+            isCenter = true;
+        }
         let ventana = window.open(
             "colorWindow.html",
             "_blank",
-            `width=400,height=200,left=${randomNumber(0, screen.width)},top=${randomNumber(0, screen.height)},resizable=no,scrollbars=no`
+            `width=400,height=200,left=${randX},top=${randY},resizable=no,scrollbars=no`
         )
         openedWindows++;
 
@@ -85,14 +130,12 @@ function windowGenerator(rand) {
 function startGame() {
     var TIME = 220;
     var spawnTime = TIME - 3;
-    var won = null;
     ventanasUnclosed = 0;
 
     var count = document.getElementById("count");
     var btnText = document.getElementById("btnText");
     var infoGame = document.getElementById("infoGame");
 
-    // btnText.innerHTML = "Empezar Juego";
     infoGame.innerHTML = "";
 
     if (regresiveCount == null) {
@@ -135,19 +178,23 @@ function validateActiveWindows() {
  * Acaba el juego, limpia el intervalo y cierra todas las ventanas que han quedado abiertas (No quiero explotarle el pc al profe :c )
  */
 function finishGame() {
-    clearInterval(regresiveCount);
-    regresiveCount = null;
+    let state;
     closeAllWindows();
 
-    // console.log(openedWindows);
-
-    btnText.innerHTML = "Reintentar";
-    if (ventanasUnclosed == 0) {
+    if (ventanasUnclosed == 0 && regresiveCount) {
+        state = "Ganada"
         infoGame.innerHTML = "Has ganado!";
-    } else {
+    } else if (regresiveCount) {
+        state = "Perdida"
         infoGame.innerHTML = "Se acabó el tiempo <br>Has perdido!"
     }
-
+    if (regresiveCount) {
+        setCookie("lastTry", "Estado de la ultima partida:" + state + "<br>Ventanas abiertas:" + openedWindows, 1);
+        cookieCont.innerHTML = getCookie("lastTry");
+        btnText.innerHTML = "Reintentar";
+    }
+    clearInterval(regresiveCount)
+    regresiveCount = null;
 }
 /**
  * cierra todas las ventanas activas

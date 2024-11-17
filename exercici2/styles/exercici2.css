@@ -34,3 +34,17 @@ button {
 button:hover {
     background-color: #0056b3;
 }
+#buttonAbandon {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b01d1d;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#buttonAbandon:hover {
+    background-color: #ff0000;
+}
